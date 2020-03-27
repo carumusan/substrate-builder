@@ -1,6 +1,6 @@
 FROM ubuntu:latest AS builder
 
-RUN apt update
+RUN apt update -y
 
 RUN apt install git
 
