@@ -2,7 +2,7 @@ FROM ubuntu:latest AS builder
 
 RUN apt install curl git
 
-RUN curl -L https://github.com/carumusan/edgeware-node/releases/download/tag_4da8fb14776a75d788a7a90c180887375bc9fca8/edgeware-ec018ea4edbc0d39260ab961694df7575809f634-linux.tar.gz --output /tmp/edgeware-ec018ea4edbc0d39260ab961694df7575809f634-linux.tar.gz
+RUN curl -L https://github.com/carumusan/substrate-builder/releases/download/tag_4da8fb14776a75d788a7a90c180887375bc9fca8/edgeware-ec018ea4edbc0d39260ab961694df7575809f634-linux.tar.gz --output /tmp/edgeware-ec018ea4edbc0d39260ab961694df7575809f634-linux.tar.gz
 
 RUN tar -xvzf /tmp/edgeware-ec018ea4edbc0d39260ab961694df7575809f634-linux.tar.gz -C /
 
