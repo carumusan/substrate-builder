@@ -20,6 +20,8 @@ VOLUME ["/data"]
 
 USER nonroot
 
+WORKDIR /
+
 ENTRYPOINT ["edgeware"]
 
 CMD ["--chain", "edgeware"]
