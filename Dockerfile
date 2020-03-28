@@ -10,7 +10,7 @@ RUN tar -xvzf /tmp/edgeware-linux.tar.gz -C /
 
 RUN git clone https://github.com/hicommonwealth/edgeware-node.git --branch=3.0.1 /edgeware-node
 
-FROM gcr.io/distroless/cc-debian10:nonroot
+FROM gcr.io/distroless/cc-debian10
 
 COPY --from=builder /edgeware /usr/local/bin/
 COPY --from=builder /edgeware-node/chains /chains
