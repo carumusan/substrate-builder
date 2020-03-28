@@ -5,7 +5,6 @@ on:
     paths:
     - '**/edgeware-build.yml'
 
-
 jobs:
   build-linux:
     runs-on: ubuntu-latest
