@@ -12,7 +12,7 @@ RUN git clone https://github.com/hicommonwealth/edgeware-node.git --branch=3.0.1
 
 FROM gcr.io/distroless/base-debian10:nonroot
 
-COPY --from=builder --chown=nonroot /edgeware /
+COPY --from=builder --chown=nonroot /edgeware /usr/local/bin/
 COPY --from=builder --chown=nonroot /edgeware-node/chains /chains
 
 EXPOSE 30333 9933 9944
