@@ -2,7 +2,8 @@ name: Build and deploy docker image
 
 on:
   push:
-    branches: [ master ]
+    paths:
+    - '**/docker-publish.yml'
 
 jobs:
   build_and_publish_docker:
