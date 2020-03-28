@@ -14,7 +14,7 @@ FROM gcr.io/distroless/cc-debian10
 
 COPY --from=builder /edgeware /usr/local/bin/
 COPY --from=builder /edgeware-node/chains /chains
-COPY --from=build-env /lib/x86_64-linux-gnu/libz.so.1 /lib/x86_64-linux-gnu/libz.so.1
+COPY --from=builder /lib/x86_64-linux-gnu/libz.so.1 /lib/x86_64-linux-gnu/libz.so.1
 
 EXPOSE 30333 9933 9944
 VOLUME ["/data"]
