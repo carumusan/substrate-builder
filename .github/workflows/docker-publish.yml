@@ -3,7 +3,8 @@ name: Build and deploy docker image
 on:
   push:
     paths:
-    - '**/docker-publish.yml'
+      - '**Dockerfile'
+      - '**/docker-publish.yml'
 
 jobs:
   build_and_publish_docker:
