@@ -12,13 +12,11 @@ RUN git clone https://github.com/hicommonwealth/edgeware-node.git --branch=3.0.1
 
 FROM gcr.io/distroless/cc-debian10:nonroot
 
-COPY --from=builder --chown=nonroot /edgeware /usr/local/bin/
-COPY --from=builder --chown=nonroot /edgeware-node/chains /chains
+COPY --from=builder /edgeware /usr/local/bin/
+COPY --from=builder /edgeware-node/chains /chains
 
 EXPOSE 30333 9933 9944
 VOLUME ["/data"]
-
-USER nonroot
 
 WORKDIR /
 
