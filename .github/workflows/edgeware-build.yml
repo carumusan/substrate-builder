@@ -2,9 +2,9 @@ name: Edgeware Build
 
 on:
   push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+    paths:
+    - '**/edgeware-build.yml'
+
 
 jobs:
   build-linux:
