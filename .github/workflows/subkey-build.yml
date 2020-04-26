@@ -27,6 +27,10 @@ jobs:
       with:
         path: target
         key: ${{ runner.os }}-cargo-build-target-${{ hashFiles('**/Cargo.lock') }}
+    - run: curl https://sh.rustup.rs -sSf | sh
+    - run: rustup update nightly
+    - run: rustup target add wasm32-unknown-unknown --toolchain nightly
+    - run: rustup update
     - run: cargo build --release -p subkey
     - name: Create Release
       id: create_release
