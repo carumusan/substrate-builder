@@ -1,1 +1,52 @@
 
+name: Subkey Build
+
+on:
+  push:
+    paths:
+    - '**/subkey-build.yml'
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        repository: paritytech/substrate
+    - name: Cache cargo registry
+      uses: actions/cache@v1
+      with:
+        path: ~/.cargo/registry
+        key: ${{ runner.os }}-cargo-registry-${{ hashFiles('**/Cargo.lock') }}
+    - name: Cache cargo index
+      uses: actions/cache@v1
+      with:
+        path: ~/.cargo/git
+        key: ${{ runner.os }}-cargo-index-${{ hashFiles('**/Cargo.lock') }}
+    - name: Cache cargo build
+      uses: actions/cache@v1
+      with:
+        path: target
+        key: ${{ runner.os }}-cargo-build-target-${{ hashFiles('**/Cargo.lock') }}
+    - run: cargo build --release -p subkey
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: tag_$GITHUB_SHA
+        release_name: Release $GITHUB_SHA
+    - id: create_archive
+      run: |
+        ARCHIVE=subkey-$GITHUB_SHA-linux.tar.gz
+        tar -czvf $ARCHIVE -C target/release subkey
+        echo ::set-output name=ASSET::$ARCHIVE
+    - uses: actions/upload-release-asset@v1.0.1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ${{ steps.create_archive.outputs.ASSET }}
+        asset_name: ${{ steps.create_archive.outputs.ASSET }}
+        asset_content_type: application/gzip
