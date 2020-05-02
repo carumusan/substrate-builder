@@ -8,7 +8,7 @@ RUN curl -L https://github.com/carumusan/substrate-builder/releases/download/tag
 
 RUN tar -xvzf /tmp/subkey-linux.tar.gz -C /
 
-FROM gcr.io/distroless/cc-debian10
+FROM debian:stable-slim
 
 COPY --from=builder /subkey /usr/local/bin/
 
