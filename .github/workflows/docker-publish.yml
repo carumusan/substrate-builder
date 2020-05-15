@@ -14,7 +14,7 @@ jobs:
       - id: build_docker
         run: |
           echo $GITHUB_TOKEN | docker login -u $GITHUB_ACTOR --password-stdin docker.pkg.github.com
-          docker build -f Dockerfile.edgeware -t docker.pkg.github.com/carumusan/substrate-builder/edgeware:3.0.1 .
+          docker build -f docker/edgeware.Dockerfile -t docker.pkg.github.com/carumusan/substrate-builder/edgeware:3.0.1 .
           docker push docker.pkg.github.com/carumusan/substrate-builder/edgeware:3.0.1
     env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
