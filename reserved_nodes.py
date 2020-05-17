@@ -26,7 +26,6 @@ def main():
     with open(output_file_path, 'w') as output_file:
         for reserved_node_pod in reserved_node_pod_stream:
             reserved_node_ips = [item.status.pod_ip for item in reserved_node_pod.items]
-            print(reserved_node_pod)
             for reserved_node_ip in reserved_node_ips:
                 json_result = requests.post(f"http://{reserved_node_ip}:9933", json=data).json()
                 peerId = json_result['result']['peerId']
