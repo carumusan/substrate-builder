@@ -22,14 +22,13 @@ def main():
         "method": "system_networkState",
         "params":[]
     }
-    reserved_node_pod_stream = kubernetes_api.list_namespaced_pod("default", label_selector=label, watch=True)
+    reserved_node_pods = kubernetes_api.list_namespaced_pod("default", label_selector=label, watch=False)
+    reserved_node_ips = [item.status.pod_ip for item in reserved_node_pods.items]
     with open(output_file_path, 'w') as output_file:
-        for reserved_node_pod in reserved_node_pod_stream:
-            reserved_node_ips = [item.status.pod_ip for item in reserved_node_pod.items]
-            for reserved_node_ip in reserved_node_ips:
-                json_result = requests.post(f"http://{reserved_node_ip}:9933", json=data).json()
-                peerId = json_result['result']['peerId']
-                output_file.write(f" --reserved-nodes=/ip4/{reserved_node_ip}/tcp/30333/p2p/{peerId}")
+        for reserved_node_ip in reserved_node_ips:
+            json_result = requests.post(f"http://{reserved_node_ip}:9933", json=data).json()
+            peerId = json_result['result']['peerId']
+            output_file.write(f" --reserved-nodes=/ip4/{reserved_node_ip}/tcp/30333/p2p/{peerId}")
 
 if __name__ == '__main__':
     main()
