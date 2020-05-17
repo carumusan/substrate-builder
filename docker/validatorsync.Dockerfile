@@ -2,6 +2,8 @@ FROM python:latest
 
 RUN pip install kubernetes
 
-COPY validatorsync.py .
+RUN pip install requests
 
-CMD ["python", "validatorsync.py"]
+COPY reserved_nodes.py .
+
+CMD ["python", "reserved_nodes.py"]
