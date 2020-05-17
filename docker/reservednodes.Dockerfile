@@ -6,4 +6,4 @@ RUN pip install requests
 
 COPY reserved_nodes.py .
 
-CMD ["python", "reserved_nodes.py"]
+ENTRYPOINT ["python", "reserved_nodes.py"]
