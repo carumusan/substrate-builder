@@ -22,7 +22,7 @@ def main():
         "method": "system_networkState",
         "params":[]
     }
-    reserved_node_pods = kubernetes_api.list_namespaced_pod("default", label_selector=label, watch=False)
+    reserved_node_pods = kubernetes_api.list_namespaced_pod("default", label_selector=label, watch=False, timeout_seconds=10)
     reserved_node_ips = [item.status.pod_ip for item in reserved_node_pods.items]
     with open(output_file_path, 'w') as output_file:
         for reserved_node_ip in reserved_node_ips:
