@@ -3,7 +3,7 @@ name: Build and deploy docker image
 on:
   push:
     paths:
-      - '**Dockerfile'
+      - '**edgeware.Dockerfile'
       - '**/docker-publish.yml'
 
 jobs:
