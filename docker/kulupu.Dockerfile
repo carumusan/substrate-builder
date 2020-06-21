@@ -1,12 +1,12 @@
 FROM debian:stable-slim AS builder
 
-ARG VERSION=v1.0.0
-
 RUN apt update
 
-RUN apt install -y curl
+RUN apt install -y curl unzip
 
-RUN curl -L https://github.com/kulupu/kulupu/releases/download/$VERSION/kulupu-linux  --output /kulupu --silent
+RUN curl -L https://github.com/kulupu/kulupu/releases/latest/download/kulupu-linux.zip  --output /kulupu.zip --silent
+
+RUN unzip /kulupu.zip
 
 RUN chmod +x /kulupu
 
