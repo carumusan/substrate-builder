@@ -7,7 +7,7 @@ from kubernetes import client, config
 import subprocess
 
 def main():
-    parser = argparse.ArgumentParser(description='Add reserved nodes')
+    parser = argparse.ArgumentParser(description='Generate node keys')
     parser.add_argument('--hostname', type=str, required=True)
     parser.add_argument('--node-type', dest="node_type", type=str, required=True)
 
