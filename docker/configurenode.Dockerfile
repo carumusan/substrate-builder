@@ -16,6 +16,6 @@ RUN pip install kubernetes
 
 RUN pip install requests
 
-COPY configure_nodes.py .
+COPY configure_node.py .
 
-ENTRYPOINT ["python", "configure_nodes.py"]
+ENTRYPOINT ["python", "configure_node.py"]
