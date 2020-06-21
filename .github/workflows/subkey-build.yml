@@ -38,8 +38,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: tag_$GITHUB_SHA
-        release_name: Release $GITHUB_SHA
+        tag_name: tag_${{ env.GITHUB_SHA }}
+        release_name: Release ${{ env.GITHUB_SHA }}
     - id: create_archive
       run: |
         ARCHIVE=subkey-$GITHUB_SHA-linux.tar.gz
