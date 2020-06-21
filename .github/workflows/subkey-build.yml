@@ -32,14 +32,17 @@ jobs:
     - run: rustup update nightly
     - run: rustup target add wasm32-unknown-unknown --toolchain nightly
     - run: cargo build --release -p subkey
+    - name: Get short SHA
+      id: sha
+      run: echo "::set-output name=sha8::$(echo ${GITHUB_SHA} | cut -c1-8)"
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: tag_${{ env.GITHUB_SHA }}
-        release_name: Release ${{ env.GITHUB_SHA }}
+        tag_name: tag_${{ steps.sha.outputs.sha8 }}
+        release_name: Release ${{ steps.sha.outputs.sha8 }}
     - id: create_archive
       run: |
         ARCHIVE=subkey-$GITHUB_SHA-linux.tar.gz
