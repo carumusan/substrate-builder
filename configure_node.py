@@ -27,9 +27,9 @@ def main():
     ensure_config_map(hostname, node_type, public_key, kubernetes_api)
 
     if node_type == "sentry":
-        set_args(command_arg_file_path, "validator", "reserved-nodes", kubernetes_api)
+        set_args(command_arg_file_path, "validator", "sentry", kubernetes_api)
     elif node_type == "validator":
-        set_args(command_arg_file_path, "sentry", "sentry", kubernetes_api)
+        set_args(command_arg_file_path, "sentry", "reserved-nodes", kubernetes_api)
 
 def set_args(command_arg_file_path, node_type, arg_name, kubernetes_api: client.CoreV1Api):
     try:
