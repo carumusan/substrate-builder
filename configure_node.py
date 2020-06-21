@@ -93,7 +93,7 @@ def ensure_config_map(hostname, node_type, public_key, kubernetes_api: client.Co
     config_map_name = f"{node_type}-multiaddresses"
     multiaddress_key = f"{hostname}_multiaddress"
     multiaddress_data = {
-        multiaddress_key: f"/ip4/{hostname}/tcp/30333/p2p/{public_key}"
+        multiaddress_key: f"/dns4/{hostname}/tcp/30333/p2p/{public_key}"
     }
     try:
         config_map = kubernetes_api.read_namespaced_config_map(name=config_map_name, 
