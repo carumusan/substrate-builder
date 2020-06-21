@@ -98,12 +98,11 @@ def ensure_config_map(hostname, node_type, public_key, kubernetes_api: client.Co
     try:
         config_map = kubernetes_api.read_namespaced_config_map(name=config_map_name, 
         namespace="default")
-        if multiaddress_key not in config_map.data:
-            patch = {            
-                "data": multiaddress_data
-            }
-            kubernetes_api.patch_namespaced_config_map(name=config_map_name, namespace="default", 
-            body=patch)
+        patch = {            
+            "data": multiaddress_data
+        }
+        kubernetes_api.patch_namespaced_config_map(name=config_map_name, namespace="default", 
+        body=patch)
     except client.rest.ApiException as api_exception:
         if api_exception.status != 404:
             raise
