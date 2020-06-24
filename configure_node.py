@@ -99,14 +99,14 @@ def ensure_config_map(hostname, node_type, public_key, network, kubernetes_api: 
     multiaddress_data = {
         multiaddress_key: f"/dns/{hostname}.tsukistaking-{node_type}/tcp/30333/p2p/{public_key}"
     }
-    set_config_map(config_map_name, multiaddress_data)
+    set_config_map(config_map_name, multiaddress_data, kubernetes_api)
 
     if node_type == "sentry":
         config_map_name = f"{node_type}-public-multiaddresses"
         public_multiaddress_data = {
             multiaddress_key: f"/dns/{hostname}.{network}.tsukistaking.com/tcp/30333/p2p/{public_key}"
         }
-        set_config_map(config_map_name, public_multiaddress_data)
+        set_config_map(config_map_name, public_multiaddress_data, kubernetes_api)
 
 def set_config_map(config_map_name, multiaddress_data, kubernetes_api: client.CoreV1Api):
     try:
