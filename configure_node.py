@@ -108,7 +108,7 @@ def ensure_config_map(hostname, node_type, public_key, network, kubernetes_api: 
         }
         set_config_map(config_map_name, public_multiaddress_data)
 
-def set_config_map(config_map_name, multiaddress_data):
+def set_config_map(config_map_name, multiaddress_data, kubernetes_api: client.CoreV1Api):
     try:
         config_map = kubernetes_api.read_namespaced_config_map(name=config_map_name, 
         namespace="default")
