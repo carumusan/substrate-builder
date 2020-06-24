@@ -11,11 +11,13 @@ def main():
     parser = argparse.ArgumentParser(description='Generate node keys')
     parser.add_argument('--hostname', type=str, required=True)
     parser.add_argument('--node-type', dest="node_type", type=str, required=True)
+    parser.add_argument('--network', type=str, required=True)
     parser.add_argument('--command-file-volume', dest="command_file_volume", type=str, required=True)
 
     parsed_args = parser.parse_args()
     hostname = parsed_args.hostname
     node_type = parsed_args.node_type
+    network = parsed_args.network
     command_file_volume = parsed_args.command_file_volume
     command_arg_file_path = os.path.join(command_file_volume, "args")
 
@@ -24,23 +26,25 @@ def main():
     
     node_key_data, public_key = ensure_node_key(hostname, node_type, kubernetes_api)
     write_node_key_file(node_key_data, command_file_volume)
-    ensure_config_map(hostname, node_type, public_key, kubernetes_api)
+    ensure_config_map(hostname, node_type, public_key, network, kubernetes_api)
 
     if node_type == "sentry":
-        set_args(command_arg_file_path, "validator", "sentry", kubernetes_api)
+        set_args(command_arg_file_path, "validator-multiaddresses", "sentry", kubernetes_api)
+        set_args(command_arg_file_path, "sentry-public-multiaddresses", "public-addr", kubernetes_api)
     elif node_type == "validator":
-        set_args(command_arg_file_path, "sentry", "reserved-nodes", kubernetes_api)
+        set_args(command_arg_file_path, "sentry-multiaddresses", "reserved-nodes", kubernetes_api)
+        set_args(command_arg_file_path, "sentry-public-multiaddresses", "sentry-nodes", kubernetes_api)
 
-def set_args(command_arg_file_path, node_type, arg_name, kubernetes_api: client.CoreV1Api):
+def set_args(command_arg_file_path, config_map_lookup, arg_name, kubernetes_api: client.CoreV1Api):
     try:
         config_map = kubernetes_api.read_namespaced_config_map(
-        name=f"{node_type}-multiaddresses", 
+        name=config_map_lookup, 
         namespace="default")
         multiaddresses = config_map.data.values()
         if multiaddresses:
             command_line_args_list = [f"--{arg_name}={x}".rstrip() for x in multiaddresses]
             command_line_args = " " + " ".join(command_line_args_list)
-            with open(command_arg_file_path, 'w') as command_arg_file:
+            with open(command_arg_file_path, 'a') as command_arg_file:
                 command_arg_file.write(command_line_args)
     except client.rest.ApiException as api_exception: 
         if api_exception.status != 404:
@@ -89,12 +93,22 @@ def create_node_key(private_key_name, node_type, kubernetes_api: client.CoreV1Ap
     secret_data = kubernetes_api.create_namespaced_secret("default", secret)
     return secret_data
 
-def ensure_config_map(hostname, node_type, public_key, kubernetes_api: client.CoreV1Api):
+def ensure_config_map(hostname, node_type, public_key, network, kubernetes_api: client.CoreV1Api):
     config_map_name = f"{node_type}-multiaddresses"
     multiaddress_key = f"{hostname}_multiaddress"
     multiaddress_data = {
         multiaddress_key: f"/dns/{hostname}.tsukistaking-{node_type}/tcp/30333/p2p/{public_key}"
     }
+    set_config_map(config_map_name, multiaddress_data)
+
+    if node_type == "sentry":
+        config_map_name = f"{node_type}-public-multiaddresses"
+        public_multiaddress_data = {
+            multiaddress_key: f"/dns/{hostname}.{network}.tsukistaking.com/tcp/30333/p2p/{public_key}"
+        }
+        set_config_map(config_map_name, public_multiaddress_data)
+
+def set_config_map(config_map_name, multiaddress_data):
     try:
         config_map = kubernetes_api.read_namespaced_config_map(name=config_map_name, 
         namespace="default")
