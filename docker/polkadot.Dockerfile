@@ -1,4 +1,4 @@
-FROM debian:stable-slim AS builder
+FROM debian:stable-slim:latest AS builder
 
 FROM parity/polkadot:latest as polkadot
 
