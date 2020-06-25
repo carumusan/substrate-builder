@@ -1,6 +1,6 @@
 FROM debian:stable-slim AS builder
 
-FROM chevdor/polkadot:latest as polkadot
+FROM parity/polkadot:latest as polkadot
 
 FROM gcr.io/distroless/cc-debian10
 
