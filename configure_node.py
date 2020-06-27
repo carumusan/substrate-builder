@@ -29,9 +29,11 @@ def main():
     ensure_config_map(hostname, node_type, public_key, network, kubernetes_api)
 
     if node_type == "sentry":
-        set_args(command_arg_file_path, "validator-multiaddresses", "sentry", kubernetes_api)
         if network != "edgeware":
+            set_args(command_arg_file_path, "validator-multiaddresses", "sentry", kubernetes_api)
             set_args(command_arg_file_path, "sentry-public-multiaddresses", "public-addr", kubernetes_api)
+        else:
+            set_args(command_arg_file_path, "validator-multiaddresses", "reserved-nodes", kubernetes_api)
     elif node_type == "validator":
         set_args(command_arg_file_path, "sentry-multiaddresses", "reserved-nodes", kubernetes_api)
         set_args(command_arg_file_path, "sentry-public-multiaddresses", "sentry-nodes", kubernetes_api)
@@ -97,15 +99,16 @@ def create_node_key(private_key_name, node_type, kubernetes_api: client.CoreV1Ap
 def ensure_config_map(hostname, node_type, public_key, network, kubernetes_api: client.CoreV1Api):
     config_map_name = f"{node_type}-multiaddresses"
     multiaddress_key = f"{hostname}_multiaddress"
+    protocol = "dns4" if network == "edgeware" else "dns" 
     multiaddress_data = {
-        multiaddress_key: f"/dns/{hostname}.tsukistaking-{node_type}/tcp/30333/p2p/{public_key}"
+        multiaddress_key: f"/{protocol}/{hostname}.tsukistaking-{node_type}/tcp/30333/p2p/{public_key}"
     }
     set_config_map(config_map_name, multiaddress_data, kubernetes_api)
 
     if node_type == "sentry":
         config_map_name = f"{node_type}-public-multiaddresses"
         public_multiaddress_data = {
-            multiaddress_key: f"/dns/{hostname}.{network}.tsukistaking.com/tcp/30333/p2p/{public_key}"
+            multiaddress_key: f"/{protocol}/{hostname}.{network}.tsukistaking.com/tcp/30333/p2p/{public_key}"
         }
         set_config_map(config_map_name, public_multiaddress_data, kubernetes_api)
 
