@@ -30,7 +30,8 @@ def main():
 
     if node_type == "sentry":
         set_args(command_arg_file_path, "validator-multiaddresses", "sentry", kubernetes_api)
-        set_args(command_arg_file_path, "sentry-public-multiaddresses", "public-addr", kubernetes_api)
+        if network != "edgeware":
+            set_args(command_arg_file_path, "sentry-public-multiaddresses", "public-addr", kubernetes_api)
     elif node_type == "validator":
         set_args(command_arg_file_path, "sentry-multiaddresses", "reserved-nodes", kubernetes_api)
         set_args(command_arg_file_path, "sentry-public-multiaddresses", "sentry-nodes", kubernetes_api)
