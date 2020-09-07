@@ -12,7 +12,7 @@ jobs:
     - uses: actions/checkout@v2
       with:
         repository: hicommonwealth/edgeware-node
-        ref: 4da8fb14776a75d788a7a90c180887375bc9fca8
+        ref: v3.0.8
     - name: Cache cargo registry
       uses: actions/cache@v1
       with:
@@ -35,11 +35,11 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: tag_4da8fb14776a75d788a7a90c180887375bc9fca8
-        release_name: Release 4da8fb14776a75d788a7a90c180887375bc9fca8
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
     - id: create_archive
       run: |
-        ARCHIVE=edgeware-$GITHUB_SHA-linux.tar.gz
+        ARCHIVE=edgeware-$GITHUB_REF-linux.tar.gz
         tar -czvf $ARCHIVE -C target/release edgeware
         echo ::set-output name=ASSET::$ARCHIVE
     - uses: actions/upload-release-asset@v1.0.1
