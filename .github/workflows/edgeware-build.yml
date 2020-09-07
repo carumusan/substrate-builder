@@ -18,17 +18,17 @@ jobs:
       uses: actions/cache@v1
       with:
         path: ~/.cargo/registry
-        key: ${{ runner.os }}-cargo-registry-${{ hashFiles('**/Cargo.lock') }}
+        key: ${{ runner.os }}-cargo-registry-${{ steps.checkout.inputs.ref }}
     - name: Cache cargo index
       uses: actions/cache@v1
       with:
         path: ~/.cargo/git
-        key: ${{ runner.os }}-cargo-index-${{ hashFiles('**/Cargo.lock') }}
+        key: ${{ runner.os }}-cargo-index-${{ steps.checkout.inputs.ref }}
     - name: Cache cargo build
       uses: actions/cache@v1
       with:
         path: target
-        key: ${{ runner.os }}-cargo-build-target-${{ hashFiles('**/Cargo.lock') }}
+        key: ${{ runner.os }}-cargo-build-target-${{ steps.checkout.inputs.ref }}
     - run: bash setup.sh
     - name: Create Release
       id: create_release
@@ -36,8 +36,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ steps.checkout.ref }}
-        release_name: Release ${{ steps.checkout.ref }}
+        tag_name: ${{ steps.checkout.inputs.ref }}
+        release_name: Release ${{ steps.checkout.inputs.ref }}
     - id: create_archive
       run: |
         ARCHIVE=edgeware-$TAG-linux.tar.gz
