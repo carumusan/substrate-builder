@@ -14,22 +14,22 @@ jobs:
       id: checkout
       with:
         repository: hicommonwealth/edgeware-node
-        ref: {{ env.TAG }}
+        ref: ${{ env.TAG }}
     - name: Cache cargo registry
       uses: actions/cache@v1
       with:
         path: ~/.cargo/registry
-        key: ${{ runner.os }}-cargo-registry-$TAG
+        key: ${{ runner.os }}-cargo-registry-${{ env.TAG }}
     - name: Cache cargo index
       uses: actions/cache@v1
       with:
         path: ~/.cargo/git
-        key: ${{ runner.os }}-cargo-index-$TAG
+        key: ${{ runner.os }}-cargo-index-${{ env.TAG }}
     - name: Cache cargo build
       uses: actions/cache@v1
       with:
         path: target
-        key: ${{ runner.os }}-cargo-build-target-$TAG
+        key: ${{ runner.os }}-cargo-build-target-${{ env.TAG }}
     - run: bash setup.sh
     - name: Create Release
       id: create_release
@@ -37,8 +37,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: $TAG
-        release_name: Release $TAG
+        tag_name: ${{ env.TAG }}
+        release_name: Release ${{ env.TAG }}
     - id: create_archive
       run: |
         ARCHIVE=edgeware-$TAG-linux.tar.gz
