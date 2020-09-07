@@ -1,5 +1,7 @@
 FROM debian:stable-slim AS builder
 
+ARG VERSION=v3.0.8
+
 RUN apt update
 
 RUN apt install -y git curl
