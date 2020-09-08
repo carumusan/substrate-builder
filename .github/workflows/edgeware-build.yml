@@ -4,8 +4,10 @@ on:
   push:
     paths:
     - '**/edgeware-build.yml'
+
 env:
   TAG: v3.0.8
+
 jobs:
   build-linux:
     runs-on: ubuntu-latest
