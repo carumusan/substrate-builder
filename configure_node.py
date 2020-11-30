@@ -72,9 +72,10 @@ def ensure_node_key(hostname, node_type, kubernetes_api: client.CoreV1Api):
     return (node_key_data, public_key)
 
 def create_node_key(private_key_name, node_type, kubernetes_api: client.CoreV1Api):
-    subkey_output = subprocess.run(["subkey", "generate-node-key", "--file", "generated_key_file"], 
+    file_path = "/generated_key_file"
+    subkey_output = subprocess.run(["subkey", "generate-node-key", "--file", file_path], 
     capture_output=True, text=True)
-    with open("generated_key_file", "rb") as node_key_file:
+    with open(file_path, "rb") as node_key_file:
         base64_encoded_data = base64.b64encode(node_key_file.read())
         base64_encoded_string = base64_encoded_data.decode('utf-8')
     secret = {
