@@ -87,7 +87,7 @@ def create_node_key(private_key_name, node_type, kubernetes_api: client.CoreV1Ap
             "node_key_file": base64_encoded_string
         },
         "stringData": {
-            "public_key": subkey_output.stdout.rstrip()
+            "public_key": subkey_output.stderr.rstrip()
         }
     }
     secret_data = kubernetes_api.create_namespaced_secret("default", secret)
