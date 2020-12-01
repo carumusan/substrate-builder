@@ -24,8 +24,8 @@ def main():
     config.load_incluster_config()
     kubernetes_api = client.CoreV1Api()
     
-    node_key_data, public_key = ensure_node_key(hostname, node_type, kubernetes_api)
-    write_node_key_file(node_key_data, command_file_volume)
+    node_key, public_key = ensure_node_key(hostname, node_type, kubernetes_api)
+    write_node_key_file(node_key, command_file_volume)
     ensure_config_map(hostname, node_type, public_key, network, kubernetes_api)
 
     if node_type == "sentry":
@@ -50,10 +50,10 @@ def set_args(command_arg_file_path, config_map_lookup, arg_name, kubernetes_api:
         if api_exception.status != 404:
             raise
 
-def write_node_key_file(node_key_data, command_file_volume):
+def write_node_key_file(node_key, command_file_volume):
     node_key_file_path = os.path.join(command_file_volume, "node-key-file")
-    with open(node_key_file_path, 'wb') as node_key_file:
-        node_key_file.write(node_key_data)
+    with open(node_key_file_path, 'w') as node_key_file:
+        node_key_file.write(node_key)
 
 def ensure_node_key(hostname, node_type, kubernetes_api: client.CoreV1Api):
     private_key_name = f"{hostname}-node-key"
@@ -64,30 +64,20 @@ def ensure_node_key(hostname, node_type, kubernetes_api: client.CoreV1Api):
             raise
         secret = create_node_key(private_key_name, node_type, kubernetes_api)
     
-    node_key_base64_bytes = secret.data['node_key_file'].encode('utf-8')
-    node_key_data = base64.decodebytes(node_key_base64_bytes)
-
-    public_key_bytes = base64.b64decode(secret.data['public_key'])
-    public_key = public_key_bytes.decode('utf-8')
-    return (node_key_data, public_key)
+    node_key = base64.b64decode(secret.data['node_key_file']).decode('utf-8')
+    public_key = base64.b64decode(secret.data['public_key']).decode('utf-8')
+    return (node_key, public_key)
 
 def create_node_key(private_key_name, node_type, kubernetes_api: client.CoreV1Api):
-    file_path = "/generated_key_file"
-    subkey_output = subprocess.run(["subkey", "generate-node-key", "--file", file_path], 
-    capture_output=True, text=True)
-    with open(file_path, "rb") as node_key_file:
-        base64_encoded_data = base64.b64encode(node_key_file.read())
-        base64_encoded_string = base64_encoded_data.decode('utf-8')
+    subkey_output = subprocess.run(["subkey", "generate-node-key"], capture_output=True, text=True)
     secret = {
         "apiVersion": "v1",
         "kind": "Secret",
         "metadata": {
             "name": private_key_name
         },
-        "data": {
-            "node_key_file": base64_encoded_string
-        },
         "stringData": {
+            "node_key_file": subkey_output.stdout.rstrip(),
             "public_key": subkey_output.stderr.rstrip()
         }
     }
