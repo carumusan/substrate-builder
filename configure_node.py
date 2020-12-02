@@ -5,7 +5,7 @@ import argparse
 import base64
 from kubernetes import client, config
 import subprocess
-import os 
+import os
 
 def main():
     parser = argparse.ArgumentParser(description='Generate node keys')
@@ -21,11 +21,12 @@ def main():
     command_file_volume = parsed_args.command_file_volume
     command_arg_file_path = os.path.join(command_file_volume, "args")
 
-    config.load_incluster_config()
+    # config.load_incluster_config()
+    config.load_kube_config("~/.kube/tsukistaking-edgeware-kubeconfig.yaml")
     kubernetes_api = client.CoreV1Api()
     
-    node_key, public_key = ensure_node_key(hostname, node_type, kubernetes_api)
-    write_node_key_file(node_key, command_file_volume)
+    node_key_bytes, public_key = ensure_node_key(hostname, node_type, kubernetes_api)
+    write_node_key_file(node_key_bytes, command_file_volume)
     ensure_config_map(hostname, node_type, public_key, network, kubernetes_api)
 
     if node_type == "sentry":
@@ -50,10 +51,10 @@ def set_args(command_arg_file_path, config_map_lookup, arg_name, kubernetes_api:
         if api_exception.status != 404:
             raise
 
-def write_node_key_file(node_key, command_file_volume):
+def write_node_key_file(node_key_bytes, command_file_volume):
     node_key_file_path = os.path.join(command_file_volume, "node-key-file")
-    with open(node_key_file_path, 'w') as node_key_file:
-        node_key_file.write(node_key)
+    with open(node_key_file_path, 'wb') as node_key_file:
+        node_key_file.write(node_key_bytes)
 
 def ensure_node_key(hostname, node_type, kubernetes_api: client.CoreV1Api):
     private_key_name = f"{hostname}-node-key"
@@ -64,9 +65,9 @@ def ensure_node_key(hostname, node_type, kubernetes_api: client.CoreV1Api):
             raise
         secret = create_node_key(private_key_name, node_type, kubernetes_api)
     
-    node_key = base64.b64decode(secret.data['node_key_file']).decode('utf-8')
+    node_key_bytes = bytearray.fromhex(base64.b64decode(secret.data['node_key_file']).decode('utf-8'))
     public_key = base64.b64decode(secret.data['public_key']).decode('utf-8')
-    return (node_key, public_key)
+    return (node_key_bytes, public_key)
 
 def create_node_key(private_key_name, node_type, kubernetes_api: client.CoreV1Api):
     subkey_output = subprocess.run(["subkey", "generate-node-key"], capture_output=True, text=True)

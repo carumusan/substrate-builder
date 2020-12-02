@@ -32,6 +32,9 @@ jobs:
       with:
         path: target
         key: ${{ runner.os }}-cargo-build-target-${{ env.TAG }}
+    - run: bash scripts/init.sh
+    - run: bash rustup install nightly-2020-10-01
+    - run: bash target add wasm32-unknown-unknown --toolchain nightly-2020-10-01
     - run: bash setup.sh
     - name: Create Release
       id: create_release
