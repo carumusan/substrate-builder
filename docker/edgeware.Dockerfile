@@ -1,6 +1,6 @@
 FROM debian:stable-slim AS builder
 
-ARG VERSION=v3.0.8
+ARG VERSION=v3.1.0
 
 RUN apt update
 
