@@ -13,16 +13,19 @@ def main():
     parser.add_argument('--node-type', dest="node_type", type=str, required=True)
     parser.add_argument('--network', type=str, required=True)
     parser.add_argument('--command-file-volume', dest="command_file_volume", type=str, required=True)
+    parser.add_argument('--kube-config', dest="kube_config", type=str)
 
     parsed_args = parser.parse_args()
     hostname = parsed_args.hostname
     node_type = parsed_args.node_type
     network = parsed_args.network
     command_file_volume = parsed_args.command_file_volume
+    kube_config = parsed_args.kube_config
     command_arg_file_path = os.path.join(command_file_volume, "args")
-
-    # config.load_incluster_config()
-    config.load_kube_config("~/.kube/tsukistaking-edgeware-kubeconfig.yaml")
+    if kube_config:
+        config.load_kube_config(kube_config)
+    else:
+        config.load_incluster_config()
     kubernetes_api = client.CoreV1Api()
     
     node_key_bytes, public_key = ensure_node_key(hostname, node_type, kubernetes_api)
