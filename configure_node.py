@@ -34,10 +34,12 @@ def main():
 
     if node_type == "sentry":
         set_args(command_arg_file_path, "validator-multiaddresses", "sentry", kubernetes_api)
-        set_args(command_arg_file_path, "sentry-public-multiaddresses", "public-addr", kubernetes_api)
     elif node_type == "validator":
         set_args(command_arg_file_path, "sentry-multiaddresses", "reserved-nodes", kubernetes_api)
         set_args(command_arg_file_path, "sentry-public-multiaddresses", "sentry-nodes", kubernetes_api)
+
+    if node_type in ("sentry", "public-validator"):
+        set_args(command_arg_file_path, f"{node_type}-public-multiaddresses", "public-addr", kubernetes_api)
 
 def set_args(command_arg_file_path, config_map_lookup, arg_name, kubernetes_api: client.CoreV1Api):
     try:
@@ -96,7 +98,7 @@ def ensure_config_map(hostname, node_type, public_key, network, kubernetes_api: 
     }
     set_config_map(config_map_name, multiaddress_data, kubernetes_api)
 
-    if node_type == "sentry":
+    if node_type in ("sentry", "public-validator"):
         config_map_name = f"{node_type}-public-multiaddresses"
         public_multiaddress_data = {
             multiaddress_key: f"/dns/{hostname}.{network}.tsukistaking.com/tcp/30333/p2p/{public_key}"
