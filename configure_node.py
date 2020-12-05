@@ -39,14 +39,19 @@ def main():
         set_args(command_arg_file_path, "sentry-public-multiaddresses", "sentry-nodes", kubernetes_api)
 
     if node_type in ("sentry", "public-validator"):
-        set_args(command_arg_file_path, f"{node_type}-public-multiaddresses", "public-addr", kubernetes_api)
+        set_args(command_arg_file_path, f"{node_type}-public-multiaddresses", "public-addr", kubernetes_api, 
+        f"{hostname}_multiaddress")
 
-def set_args(command_arg_file_path, config_map_lookup, arg_name, kubernetes_api: client.CoreV1Api):
+def set_args(command_arg_file_path, config_map_lookup, arg_name, kubernetes_api: client.CoreV1Api, key=None):
     try:
         config_map = kubernetes_api.read_namespaced_config_map(
         name=config_map_lookup, 
         namespace="default")
-        multiaddresses = config_map.data.values()
+        multiaddress_data = config_map.data
+        if key:
+            multiaddresses = [multiaddress_data[key]]
+        else:
+            multiaddresses = multiaddress_data.values()
         if multiaddresses:
             command_line_args_list = [f"--{arg_name}={x}".rstrip() for x in multiaddresses]
             command_line_args = " " + " ".join(command_line_args_list)
