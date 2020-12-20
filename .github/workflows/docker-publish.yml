@@ -31,8 +31,6 @@ jobs:
         env:
           EDGEWARE_VERSION: v3.0.8
         with:
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
           context: .
           file: docker/edgeware.Dockerfile
           platforms: linux/amd64,linux/arm64,linux/386
