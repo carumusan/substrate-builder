@@ -32,7 +32,7 @@ jobs:
           file: docker/edgeware.Dockerfile
           push: true
           tags: |
-            edgeware:${{ env.EDGEWARE_VERSION }}
-            edgeware:latest
+            ghcr.io/edgeware:${{ env.EDGEWARE_VERSION }}
+            ghcr.io/edgeware:latest
           build-args: |
              VERSION=${{ env.EDGEWARE_VERSION }}
