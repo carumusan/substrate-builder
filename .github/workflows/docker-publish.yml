@@ -33,7 +33,7 @@ jobs:
         with:
           context: .
           file: docker/edgeware.Dockerfile
-          platforms: linux/amd64,linux/arm64,linux/386
+          platforms: linux/amd64
           push: true
           tags: |
             edgeware:${{ env.EDGEWARE_VERSION }}
