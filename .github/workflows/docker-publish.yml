@@ -5,16 +5,40 @@ on:
     paths:
       - '**edgeware.Dockerfile'
       - '**/docker-publish.yml'
-
 jobs:
-  build_and_publish_docker:
+  path-context:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2.0.0
-      - id: build_docker
-        run: |
-          echo $GITHUB_TOKEN | docker login -u $GITHUB_ACTOR --password-stdin docker.pkg.github.com
-          docker build -f docker/edgeware.Dockerfile -t docker.pkg.github.com/carumusan/substrate-builder/edgeware:3.0.1 .
-          docker push docker.pkg.github.com/carumusan/substrate-builder/edgeware:3.0.1
-    env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      -
+        name: Checkout
+        uses: actions/checkout@v2
+      -
+        name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      -
+        name: Login to GitHub Container Registry
+        uses: docker/login-action@v1 
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.CR_PAT }}
+      -
+        name: Build and push
+        uses: docker/build-push-action@v2
+        env:
+          EDGEWARE_VERSION: v3.0.8
+        with:
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          context: .
+          file: docker/edgeware.Dockerfile
+          platforms: linux/amd64,linux/arm64,linux/386
+          push: true
+          tags: |
+            edgeware:${{ env.EDGEWARE_VERSION }}
+            edgeware:latest
+          build-args: |
+             VERSION=${{ env.EDGEWARE_VERSION }}
