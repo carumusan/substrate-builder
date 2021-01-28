@@ -26,7 +26,7 @@ jobs:
         name: Build and push
         uses: docker/build-push-action@v2
         env:
-          EDGEWARE_VERSION: v3.1.0
+          EDGEWARE_VERSION: v3.2.0
         with:
           context: .
           file: docker/edgeware.Dockerfile
