@@ -1,10 +1,6 @@
-FROM debian:stable-slim AS builder
-
 ARG VERSION=latest
-
-ARG APPIMAGE=parity/polkadot:${VERSION}
-
-FROM $APPIMAGE as polkadot
+FROM debian:stable-slim AS builder
+FROM parity/polkadot:$VERSION as polkadot
 
 FROM gcr.io/distroless/cc-debian10
 
