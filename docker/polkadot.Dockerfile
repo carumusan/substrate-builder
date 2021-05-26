@@ -2,7 +2,7 @@ FROM debian:stable-slim AS builder
 
 ARG VERSION=latest
 
-FROM parity/polkadot:$VERSION as polkadot
+FROM parity/polkadot:${VERSION} as polkadot
 
 FROM gcr.io/distroless/cc-debian10
 
