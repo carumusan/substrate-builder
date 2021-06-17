@@ -26,7 +26,7 @@ jobs:
         name: Build and push
         uses: docker/build-push-action@v2
         env:
-          VERSION: v0.9.3
+          VERSION: v0.8.30
         with:
           context: .
           file: docker/polkadot.Dockerfile
