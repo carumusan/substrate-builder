@@ -1,12 +1,20 @@
 FROM debian:stable-slim AS builder
 
-ARG VERSION=v3.1.0
+ARG VERSION=v3.3.1
 
 RUN apt update
 
 RUN apt install -y git curl
 
-RUN curl -L https://github.com/carumusan/substrate-builder/releases/download/$VERSION/edgeware-linux.tar.gz --output /tmp/edgeware-linux.tar.gz
+RUN git clone https://github.com/hicommonwealth/edgeware-node
+
+WORKDIR edgeware-node
+
+RUN git checkout ${VERSION}
+
+RUN bash setup.sh
+
+RUN cp target/release/edgeware /edgeware
 
 RUN tar -xvzf /tmp/edgeware-linux.tar.gz -C /
 
