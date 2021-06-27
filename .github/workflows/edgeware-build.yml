@@ -6,7 +6,7 @@ on:
     - '**/edgeware-build.yml'
 
 env:
-  TAG: v3.2.0
+  TAG: v3.3.1
 
 jobs:
   build-linux:
@@ -32,10 +32,9 @@ jobs:
       with:
         path: target
         key: ${{ runner.os }}-cargo-build-target-${{ env.TAG }}
+    - run: rustup install nightly-2021-03-15
+    - run: rustup default nightly-2021-03-15-x86_64-unknown-linux-gnu
     - run: bash scripts/init.sh
-    - run: rustup install nightly-2020-10-01
-    - run: rustup target add wasm32-unknown-unknown --toolchain nightly-2020-10-01
-    - run: rustup default nightly-2020-10-01-x86_64-unknown-linux-gnu
     - run: bash setup.sh
     - name: Create Release
       id: create_release
