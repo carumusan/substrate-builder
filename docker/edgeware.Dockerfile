@@ -16,8 +16,6 @@ RUN bash setup.sh
 
 RUN cp target/release/edgeware /edgeware
 
-RUN tar -xvzf /tmp/edgeware-linux.tar.gz -C /
-
 FROM gcr.io/distroless/cc-debian10
 
 COPY --from=builder /edgeware /usr/local/bin/
