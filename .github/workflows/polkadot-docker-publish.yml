@@ -5,7 +5,7 @@ on:
     paths:
       - '**polkadot.Dockerfile'
       - '**/polkadot-docker-publish.yml'
-jobs: 
+jobs:
   path-context:
     runs-on: ubuntu-latest
     steps:
