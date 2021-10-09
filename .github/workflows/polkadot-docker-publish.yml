@@ -1,10 +1,12 @@
 name: Build and deploy docker image
 
 on:
-  push:
-    paths:
-      - '**polkadot.Dockerfile'
-      - '**/polkadot-docker-publish.yml'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Polkadot Version'
+        required: true
+        default: 'v0.9.11'
 jobs:
   path-context:
     runs-on: ubuntu-latest
@@ -25,14 +27,12 @@ jobs:
       -
         name: Build and push
         uses: docker/build-push-action@v2
-        env:
-          VERSION: v0.9.11
         with:
           context: .
           file: docker/polkadot.Dockerfile
           push: true
           tags: |
-            ghcr.io/tsukistaking/polkadot:${{ env.VERSION }}
+            ghcr.io/tsukistaking/polkadot:${{ github.event.inputs.name }}
             ghcr.io/tsukistaking/polkadot:latest
           build-args: |
-             VERSION=${{ env.VERSION }}
+             VERSION=${{ github.event.inputs.name }}
