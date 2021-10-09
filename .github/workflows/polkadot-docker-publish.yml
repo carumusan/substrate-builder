@@ -32,7 +32,7 @@ jobs:
           file: docker/polkadot.Dockerfile
           push: true
           tags: |
-            ghcr.io/tsukistaking/polkadot:${{ github.event.inputs.name }}
+            ghcr.io/tsukistaking/polkadot:${{ github.event.inputs.version }}
             ghcr.io/tsukistaking/polkadot:latest
           build-args: |
-             VERSION=${{ github.event.inputs.name }}
+             VERSION=${{ github.event.inputs.version }}
