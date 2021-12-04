@@ -1,9 +1,6 @@
 name: Edgeware Build
 
 on:
-  push:
-    paths:
-    - '**/edgeware-build.yml'
   workflow_dispatch:
     inputs:
       version:
