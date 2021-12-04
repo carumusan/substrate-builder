@@ -31,6 +31,8 @@ jobs:
       with:
         path: target
         key: ${{ runner.os }}-cargo-build-target-${{ github.event.inputs.version }}
+    - run: rustup install nightly-2021-03-15
+    - run: rustup default nightly-2021-03-15-x86_64-unknown-linux-gnu
     - run: bash scripts/init.sh
     - run: bash setup.sh
     - name: Create Release
