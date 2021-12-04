@@ -1,9 +1,6 @@
 name: Build and deploy docker image
 
 on:
-  push:
-    paths:
-      - '**edgeware.Dockerfile'
   workflow_dispatch:
     inputs:
       version:
