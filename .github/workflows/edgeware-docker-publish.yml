@@ -35,4 +35,4 @@ jobs:
             ghcr.io/tsukistaking/edgeware:${{ github.event.inputs.version }}
             ghcr.io/tsukistaking/edgeware:latest
           build-args: |
-             VERSION=:${{ github.event.inputs.version }}
+             VERSION=${{ github.event.inputs.version }}
