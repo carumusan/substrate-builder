@@ -1,4 +1,4 @@
-FROM debian:stable-slim AS builder
+FROM debian:11-slim AS builder
 
 ARG VERSION=v3.3.3
 
