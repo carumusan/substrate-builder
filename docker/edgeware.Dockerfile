@@ -16,7 +16,7 @@ RUN bash setup.sh
 
 RUN cp target/release/edgeware /edgeware
 
-FROM gcr.io/distroless/cc-debian10
+FROM gcr.io/distroless/cc-debian11
 
 COPY --from=builder /edgeware /usr/local/bin/
 COPY --from=builder /lib/x86_64-linux-gnu/libz.so.1 /lib/x86_64-linux-gnu/libz.so.1
