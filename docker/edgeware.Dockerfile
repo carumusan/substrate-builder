@@ -4,7 +4,7 @@ ARG VERSION=v3.3.3
 
 RUN apt update
 
-RUN apt install -y git curl file
+RUN apt install -y git curl
 
 RUN git clone https://github.com/hicommonwealth/edgeware-node
 
