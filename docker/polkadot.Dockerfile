@@ -1,6 +1,8 @@
 ARG VERSION=latest
 FROM debian:11-slim AS builder
 
+SHELL ["/bin/bash", "-c"] 
+
 RUN apt update
 
 RUN apt install -y curl file
