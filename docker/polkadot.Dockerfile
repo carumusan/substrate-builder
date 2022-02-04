@@ -1,6 +1,8 @@
 ARG VERSION=latest
 FROM debian:stable-slim AS builder
 
+RUN apt update
+
 RUN apt install -y curl
 
 RUN curl -L https://github.com/paritytech/polkadot/releases/download/${VERSION}/polkadot  --output /usr/bin/polkadot --silent
