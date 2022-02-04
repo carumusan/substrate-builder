@@ -1,6 +1,7 @@
 ARG VERSION=latest
 FROM debian:stable-slim AS builder
 
+RUN apt install -y wget
 RUN wget https://github.com/paritytech/polkadot/releases/download/${VERSION}/polkadot /usr/bin/polkadot
 
 FROM gcr.io/distroless/cc-debian10
