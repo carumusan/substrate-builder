@@ -7,7 +7,7 @@ RUN apt install -y curl
 
 RUN curl -L https://github.com/paritytech/polkadot/releases/download/${VERSION}/polkadot  --output /usr/bin/polkadot
 
-RUN ldd /usr/bin/polkadot
+RUN file /usr/bin/polkadot
 
 FROM gcr.io/distroless/cc-debian11
 
