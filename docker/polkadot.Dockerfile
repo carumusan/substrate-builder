@@ -1,13 +1,10 @@
-ARG VERSION=latest
 FROM debian:11-slim AS builder
 
-SHELL ["/bin/bash", "-c"] 
+ARG VERSION=latest
 
 RUN apt update
 
 RUN apt install -y curl file
-
-RUN echo $VERSION
 
 RUN curl -L "https://github.com/paritytech/polkadot/releases/download/${VERSION}/polkadot"  --output /usr/bin/polkadot
 
