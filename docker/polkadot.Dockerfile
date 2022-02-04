@@ -1,19 +1,12 @@
-FROM debian:11-slim AS builder
-
 ARG VERSION=latest
-
-RUN apt update
-
-RUN apt install -y curl file
-
-RUN curl -L "https://github.com/paritytech/polkadot/releases/download/${VERSION}/polkadot"  --output /usr/bin/polkadot
-
-RUN ldd /usr/bin/polkadot
+FROM debian:11-slim AS builder
+FROM parity/polkadot:$VERSION as polkadot
 
 FROM gcr.io/distroless/cc-debian11
 
+COPY --from=builder /lib/x86_64-linux-gnu/libz.so.1 /lib/x86_64-linux-gnu/libz.so.1
 COPY --from=builder /usr/bin/xargs /usr/bin/xargs
-COPY --from=builder /usr/bin/polkadot /usr/local/bin/
+COPY --from=polkadot /usr/bin/polkadot /usr/local/bin/
 
 EXPOSE 30333 9933 9944
 VOLUME ["/data"]
