@@ -6,7 +6,7 @@ RUN apt update
 
 RUN apt install -y git curl
 
-RUN git clone https://github.com/hicommonwealth/edgeware-node
+RUN git clone https://github.com/edgeware-network/edgeware-node
 
 WORKDIR edgeware-node
 
