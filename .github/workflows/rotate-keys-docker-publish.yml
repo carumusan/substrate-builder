@@ -3,6 +3,7 @@ name: Rotate Keys Docker Build and Publish
 on:
   push:
     paths:
+    - '**/rotate-keys-docker-publish.yml'
     - '**/rotate_keys.py'
 jobs:
   path-context:
