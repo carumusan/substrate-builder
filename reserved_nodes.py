@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 
-import requests
 import argparse
+
+import requests
 from kubernetes import client, config
+
 
 def main():
     parser = argparse.ArgumentParser(description='Add reserved nodes')

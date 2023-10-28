@@ -1,0 +1,33 @@
+name: Rotate Keys Docker Build and Publish
+
+on:
+  push:
+    paths:
+    - '**/rotate_keys.py'
+jobs:
+  path-context:
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v2
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      -
+        name: Login to GitHub Container Registry
+        uses: docker/login-action@v1 
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.CR_PAT }}
+      -
+        name: Build and push
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: docker/subkey.Dockerfile
+          push: true
+          tags: |
+            ghcr.io/tsukistaking/rotatekeys:latest
+            ghcr.io/tsukistaking/rotatekeys:${{ github.sha }}

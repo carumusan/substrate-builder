@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 
-import requests
 import argparse
 import base64
-from kubernetes import client, config
-import subprocess
 import os
+import subprocess
+
+from kubernetes import client, config
+
 
 def main():
     parser = argparse.ArgumentParser(description='Generate node keys')
