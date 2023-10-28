@@ -9,7 +9,7 @@ def main():
         "method": "author_rotateKeys",
         "params":[]
     }
-    json_result = requests.post(f"http://localhost:9933", json=data).json()
+    json_result = requests.post(f"http://localhost:9944", json=data).json()
     print(json_result['result'])
 
 if __name__ == '__main__':
